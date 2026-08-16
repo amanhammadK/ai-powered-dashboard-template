@@ -142,57 +142,63 @@ export default function Dashboard() {
     ['errors', 'Errors'],
   ];
 
+  const sectionIcons: Record<string, string> = {
+    overview: '📊', revenue: '💰', users: '👥', performance: '⚡', errors: '🚨',
+  };
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <aside style={{ width: 220, background: '#0f172a', color: '#e2e8f0', padding: '1.5rem 0', flexShrink: 0, position: 'relative' }}>
-        <div style={{ padding: '0 1.5rem', marginBottom: '2rem' }}>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>Pulse</div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 2 }}>Analytics Dashboard</div>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f1f5f9', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      <aside style={{ width: 240, background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)', color: '#e2e8f0', padding: '2rem 0', flexShrink: 0, position: 'relative', boxShadow: '4px 0 24px rgba(0,0,0,0.15)' }}>
+        <div style={{ padding: '0 1.5rem', marginBottom: '2.5rem' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>Pulse</div>
+          <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Analytics Dashboard</div>
         </div>
-        <nav>
+        <nav style={{ padding: '0 0.75rem' }}>
           {navItems.map(([key, label]) => (
             <button
               key={key}
               onClick={() => setActiveSection(key)}
               style={{
-                display: 'block', width: '100%', textAlign: 'left', padding: '0.6rem 1.5rem',
-                background: activeSection === key ? 'rgba(99,102,241,0.2)' : 'transparent',
-                color: activeSection === key ? '#a5b4fc' : '#94a3b8', border: 'none', cursor: 'pointer',
-                borderLeft: activeSection === key ? '3px solid #6366f1' : '3px solid transparent',
-                fontSize: '0.9rem',
+                display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', textAlign: 'left', padding: '0.7rem 1rem',
+                background: activeSection === key ? 'rgba(99,102,241,0.15)' : 'transparent',
+                color: activeSection === key ? '#c7d2fe' : '#94a3b8', border: 'none', cursor: 'pointer',
+                borderLeft: activeSection === key ? '3px solid #818cf8' : '3px solid transparent',
+                fontSize: '0.875rem', fontWeight: activeSection === key ? 600 : 400,
+                borderRadius: '0 6px 6px 0', transition: 'all 0.15s ease',
               }}
             >
+              <span style={{ fontSize: '1rem' }}>{sectionIcons[key]}</span>
               {label}
             </button>
           ))}
         </nav>
-        <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', fontSize: '0.7rem', color: '#475569' }}>
-          v1.0.0
+        <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', fontSize: '0.65rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}></span>
+          Live &middot; v1.0.0
         </div>
       </aside>
 
-      <main style={{ flex: 1, padding: '2rem', maxWidth: 1100 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <main style={{ flex: 1, padding: '2rem 2.5rem', maxWidth: 1200 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
           <div>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 700, margin: 0, color: '#0f172a' }}>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0, color: '#0f172a', letterSpacing: '-0.02em' }}>
               {activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}
             </h1>
-            <p style={{ color: '#64748b', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>
-              Live data via MCP server &middot; get_metrics / get_chart_data / get_insights
+            <p style={{ color: '#64748b', fontSize: '0.8rem', margin: '0.35rem 0 0' }}>
+              Live data via MCP server &middot; tools: get_metrics, get_chart_data, get_insights, drill_down
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button
-              onClick={generateInsight}
-              disabled={generating}
-              style={{
-                padding: '0.5rem 1.25rem', background: '#6366f1', color: '#fff', border: 'none',
-                borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem',
-              }}
-            >
-              {generating ? 'Analyzing...' : 'Generate AI Insight'}
-            </button>
-          </div>
+          <button
+            onClick={generateInsight}
+            disabled={generating}
+            style={{
+              padding: '0.6rem 1.5rem', background: generating ? '#94a3b8' : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff', border: 'none',
+              borderRadius: 8, cursor: generating ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: '0.85rem',
+              boxShadow: generating ? 'none' : '0 2px 8px rgba(99,102,241,0.3)', transition: 'all 0.2s ease',
+            }}
+          >
+            {generating ? 'Analyzing...' : 'Generate AI Insight'}
+          </button>
         </div>
 
         {error && (
@@ -220,55 +226,66 @@ export default function Dashboard() {
         ) : (
           <>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
-              {(kpis || []).map(k => (
-                <div key={k.label} style={{ background: '#fff', borderRadius: 12, padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{k.label}</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#0f172a', marginTop: '0.4rem' }}>{k.value}</div>
-                  <div style={{ color: k.up ? '#10b981' : '#ef4444', fontSize: '0.8rem', fontWeight: 600 }}>{k.change}</div>
+              {(kpis || []).map((k, i) => (
+                <div key={k.label} style={{
+                  background: '#fff', borderRadius: 12, padding: '1.25rem 1.5rem',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)',
+                  borderLeft: `3px solid ${['#6366f1', '#10b981', '#f59e0b', '#ef4444'][i]}`,
+                  transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+                }}>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 500 }}>{k.label}</div>
+                  <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', marginTop: '0.35rem', letterSpacing: '-0.02em' }}>{k.value}</div>
+                  <div style={{
+                    color: k.up ? '#10b981' : '#ef4444', fontSize: '0.75rem', fontWeight: 600, marginTop: '0.25rem',
+                    display: 'flex', alignItems: 'center', gap: '0.25rem',
+                  }}>
+                    {k.up ? '↑' : '↓'} {k.change}
+                  </div>
                 </div>
               ))}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-              <div style={{ background: '#fff', borderRadius: 12, padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a', marginBottom: '1rem' }}>Revenue Over Time</div>
+              <div style={{ background: '#fff', borderRadius: 12, padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.25rem' }}>Revenue Over Time</div>
                 {revenueChart ? (
-                  <Line data={revenueChart} options={{ responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }} />
+                  <Line data={revenueChart} options={{ responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }, x: { grid: { display: false }, ticks: { font: { size: 11 } } } } }} />
                 ) : <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>No data</div>}
               </div>
-              <div style={{ background: '#fff', borderRadius: 12, padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a', marginBottom: '1rem' }}>Traffic Share</div>
+              <div style={{ background: '#fff', borderRadius: 12, padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.25rem' }}>Traffic Share</div>
                 {trafficChart ? (
-                  <Doughnut data={trafficChart} options={{ responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }} />
+                  <Doughnut data={trafficChart} options={{ responsive: true, plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, font: { size: 11 } } } }, cutout: '68%' }} />
                 ) : <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>No data</div>}
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
-              <div style={{ background: '#fff', borderRadius: 12, padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a', marginBottom: '1rem' }}>Users by Channel</div>
+              <div style={{ background: '#fff', borderRadius: 12, padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.25rem' }}>Users by Channel</div>
                 {usersChart ? (
-                  <Bar data={usersChart} options={{ responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#f1f5f9' } } } }} />
+                  <Bar data={usersChart} options={{ responsive: true, plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, font: { size: 11 } } } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } } } }} />
                 ) : <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>No data</div>}
               </div>
-              <div style={{ background: '#fff', borderRadius: 12, padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a', marginBottom: '1rem' }}>AI Insights</div>
+              <div style={{ background: '#fff', borderRadius: 12, padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '1rem' }}>AI Insights</div>
                 {(insights || []).length === 0 ? (
                   <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>No insights</div>
-                ) : (insights || []).map(ins => (
+                ) : (insights || []).slice(0, 3).map(ins => (
                   <div key={ins.title} style={{ padding: '0.75rem 0', borderBottom: '1px solid #f1f5f9' }}>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#0f172a' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span style={{
-                        display: 'inline-block', padding: '0.1rem 0.5rem', borderRadius: 4, marginRight: '0.5rem',
-                        fontSize: '0.7rem', textTransform: 'uppercase', background: ins.type === 'anomaly' ? '#fef2f2' : '#eef2ff',
-                        color: ins.type === 'anomaly' ? '#ef4444' : '#6366f1',
+                        display: 'inline-block', padding: '0.15rem 0.5rem', borderRadius: 4,
+                        fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700,
+                        background: ins.type === 'anomaly' ? '#fef2f2' : ins.type === 'prediction' ? '#f0fdf4' : '#eef2ff',
+                        color: ins.type === 'anomaly' ? '#ef4444' : ins.type === 'prediction' ? '#16a34a' : '#6366f1',
                       }}>
                         {ins.type}
                       </span>
                       {ins.title}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>
-                      {ins.detail || ins.details?.join(', ') || (ins.predictions ? ins.predictions.map((p: any) => `${p.month}: $${Math.round(p.predicted).toLocaleString()}`).join(', ') : '')}
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.3rem', lineHeight: 1.4 }}>
+                      {ins.detail || ins.details?.join(', ') || (ins.predictions ? ins.predictions.map((p: any) => `${p.month}: $${Math.round(p.predicted).toLocaleString()}`).join(' → ') : '')}
                     </div>
                   </div>
                 ))}
